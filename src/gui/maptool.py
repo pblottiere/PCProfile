@@ -34,7 +34,7 @@ TABLE="terrain"
 # SRID=32620
 SRID=32616
 
-class RectangleMapTool(QgsMapToolEmitPoint):
+class ProfileMapTool(QgsMapToolEmitPoint):
     updated = pyqtSignal()
     fake = pyqtSignal()
 
@@ -55,7 +55,8 @@ class RectangleMapTool(QgsMapToolEmitPoint):
         self._zmin = 0
         self._zmax = 10
 
-        qml = "/tmp/coucou.qml"
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        qml = os.path.join(dir_path, "qml", "scatterplot.qml")
         self.view = QQuickView()
         self.view.setResizeMode(QQuickView.SizeRootObjectToView)
         self.view.rootContext().setContextProperty("pyscatter", self)

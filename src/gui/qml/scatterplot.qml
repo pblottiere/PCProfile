@@ -10,15 +10,15 @@ ChartView {
 
   ValueAxis {
       id: axisX
-      min: pyscatter.xmin
-      max: pyscatter.xmax
+      min: pychart.xmin
+      max: pychart.xmax
       tickCount: 1
   }
 
   ValueAxis {
       id: axisY
-      min: pyscatter.zmin
-      max: pyscatter.zmax
+      min: pychart.zmin
+      max: pychart.zmax
       tickCount: 1
   }
 
@@ -37,21 +37,21 @@ ChartView {
 
   function addPoints() {
     scatter2.clear()
-    axisX.min = pyscatter.xmin
-    axisX.max = pyscatter.xmax
+    axisX.min = pychart.xmin
+    axisX.max = pychart.xmax
 
-    axisY.min = pyscatter.zmin
-    axisY.max = pyscatter.zmax
+    axisY.min = pychart.zmin
+    axisY.max = pychart.zmax
 
-    var points_x = pyscatter.points_x
-    var points_y = pyscatter.points_y
+    var points_x = pychart.points_x
+    var points_y = pychart.points_y
     for (var index in points_x) {
       scatter2.append(points_x[index], points_y[index])
     }
   }
 
   Connections {
-    target: pyscatter
+    target: pychart
     onUpdated: {
       addPoints()
     }
