@@ -1,0 +1,21 @@
+[general]
+name=PCProfile
+qgisMinimumVersion=3.0
+description=Point Cloud Profile
+version=0.0.1
+author=Paul Blottiere
+email=blottiere.paul@gmail.com
+
+about=Draw a profile from a pointcloud stored in PostgreSQL
+
+repository=https://github.com/pblottiere/PCProfile
+issues=https://github.com/pblottiere/PCProfile/issues
+
+tags=pointcloud,profile,postgresql
+
+homepage=https://github.com/pblottiere/PCProfile
+category=Plugins
+icon=icon.png
+experimental=False
+
+deprecated=False
