@@ -46,3 +46,6 @@ class View(object):
         self.widget.setWidget(self.container)
         self.widget.setMinimumHeight(300)
         iface.addDockWidget(Qt.BottomDockWidgetArea, self.widget)
+
+    def show(self):
+        self.widget.show()

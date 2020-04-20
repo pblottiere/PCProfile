@@ -128,25 +128,4 @@ class Database(object):
 
                 points.append(Point(x, z))
 
-        return points
-
-        # total = len(xvalues)
-        # step = 1
-        # treshold = 100000
-        # if total > treshold:
-        #     perc = 100*treshold/total
-        #     n = perc*total/100
-        #     step =int(total / n)
-
-        # self._points_x = {}
-        # step_i = 0
-        # for i, x in enumerate(xvalues):
-        #     if step_i == 0:
-        #         self._points_x[str(i)] = x
-        #         self._points_y[str(i)] = zvalues[i]
-
-        #     step_i += 1
-        #     if step_i == step:
-        #         step_i = 0
-
-        # self.updated.emit()
+        return points, xmin, xmax, zmin, zmax

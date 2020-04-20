@@ -43,8 +43,6 @@ class MinimalPlugin:
         self.action.triggered.connect(self.profile)
         self.iface.addToolBarIcon(self.action)
 
-        self.tool = ProfileMapTool(self.iface)
-
         self.dock = SelectDock()
         self.iface.addDockWidget(Qt.LeftDockWidgetArea, self.dock)
 
@@ -53,6 +51,7 @@ class MinimalPlugin:
 
         self.chart = Chart(self.iface.mapCanvas())
         self.view = View(self.iface, self.chart)
+        self.tool = ProfileMapTool(self.iface, self.chart)
 
     def update_visibility(self):
         enable = False
@@ -71,3 +70,4 @@ class MinimalPlugin:
     def profile(self):
         self.iface.mapCanvas().setMapTool(self.tool)
         self.dock.show()
+        self.view.show()

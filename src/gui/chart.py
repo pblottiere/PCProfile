@@ -50,13 +50,13 @@ class Chart(QObject):
 
     @pyqtProperty(float, notify=fake)
     def xmin(self):
-        # return self._xmin
-        return self.canvas.extent().xMinimum()
+        return self._xmin
+        # return self.canvas.extent().xMinimum()
 
     @pyqtProperty(float, notify=fake)
     def xmax(self):
-        return self.canvas.extent().xMaximum()
-        # return self._xmax
+        # return self.canvas.extent().xMaximum()
+        return self._xmax
 
     @pyqtProperty(float, notify=fake)
     def zmax(self):
@@ -75,3 +75,31 @@ class Chart(QObject):
     @pyqtProperty('QVariantMap')
     def points_y(self):
         return self._points_y
+
+    def update(self, points, xmin, xmax, zmin, zmax):
+        self._xmin = xmin
+        self._xmax = xmax
+        self._zmin = zmin
+        self._zmax = zmax
+
+        total = len(points)
+        step = 1
+        treshold = 100000
+        if total > treshold:
+            perc = 100*treshold/total
+            n = perc*total/100
+            step =int(total / n)
+
+        step_i = 0
+        self._points_x = {}
+        self._points_y = {}
+        for i, point in enumerate(points):
+            if step_i == 0:
+                self._points_x[str(i)] = point.x
+                self._points_y[str(i)] = point.y
+
+            step_i += 1
+            if step_i == step:
+                step_i = 0
+
+        self.updated.emit()

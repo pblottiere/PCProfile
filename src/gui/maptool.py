@@ -43,8 +43,9 @@ from PCProfile.src.core import Database
 
 class ProfileMapTool(QgsMapToolEmitPoint):
 
-    def __init__(self, iface):
+    def __init__(self, iface, chart):
         self.iface = iface
+        self.chart = chart
         QgsMapToolEmitPoint.__init__(self, self.iface.mapCanvas())
         self.rubberBand = QgsRubberBand(self.iface.mapCanvas(), True)
         self.rubberBand.setColor(QColor(255, 0, 0, 100))
@@ -63,18 +64,19 @@ class ProfileMapTool(QgsMapToolEmitPoint):
         self.showRect(self.startPoint, self.endPoint)
 
     def canvasReleaseEvent(self, e):
+        self.isEmittingPoint = False
         if not self.rectangle():
             return
-
-        self.isEmittingPoint = False
 
         provider = self.iface.activeLayer().dataProvider()
         uri = QgsDataSourceUri(provider.dataSourceUri())
         db = Database(uri)
         db.open()
         wkt = "SRID=32616;{}".format(self.rectangle().asWktPolygon())
-        points = db.intersects_points(wkt)
+        points, xmin, xmax, zmin, zmax = db.intersects_points(wkt)
         db.close()
+
+        self.chart.update(points, xmin, xmax, zmin, zmax)
 
     def canvasMoveEvent(self, e):
         if not self.isEmittingPoint:
