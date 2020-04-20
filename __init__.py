@@ -48,6 +48,17 @@ class MinimalPlugin:
         self.dock = SelectDock()
         self.iface.addDockWidget(Qt.LeftDockWidgetArea, self.dock)
 
+        self.iface.currentLayerChanged.connect(self.update_visibility)
+        self.update_visibility()
+
+    def update_visibility(self):
+        enable = False
+        if self.iface.activeLayer():
+            uri = self.iface.activeLayer().dataProvider().dataSourceUri()
+            if "(pa)" in uri:
+                enable = True
+        self.action.setEnabled(enable)
+
     def unload(self):
         self.iface.removeToolBarIcon(self.action)
         del self.action

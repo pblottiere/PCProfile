@@ -24,7 +24,9 @@ __license__ = "GPLv3"
 
 
 import os
-from PyQt5 import QtCore, QtWidgets, uic
+
+from qgis.core import QgsProject
+from qgis.PyQt import QtCore, QtWidgets, uic
 
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(

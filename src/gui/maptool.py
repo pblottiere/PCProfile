@@ -22,7 +22,7 @@ __license__ = "GPLv3"
 
 from qgis.PyQt.QtGui import QColor
 
-from qgis.core import QgsWkbTypes, QgsPointXY, QgsRectangle
+from qgis.core import QgsWkbTypes, QgsPointXY, QgsRectangle, Qgis
 from qgis.gui import QgsMapToolEmitPoint, QgsRubberBand, QgsMapTool
 
 # from qgis.core import Qgis, QgsWkbTypes, QgsPointXY, QgsRectangle, QgsMessageLog, QgsDataSourceUri, QgsProject
@@ -50,6 +50,12 @@ class ProfileMapTool(QgsMapToolEmitPoint):
         self.rubberBand.reset(True)
 
     def canvasPressEvent(self, e):
+        uri = self.iface.activeLayer().dataProvider().dataSourceUri()
+        if "(pa)" not in uri:
+            msg = "The active layer is not based on pgpointcloud"
+            level = Qgis.Warning
+            self.iface.messageBar().pushMessage("PCProfile", msg, level=level)
+
         self.startPoint = self.toMapCoordinates(e.pos())
         self.endPoint = self.startPoint
         self.isEmittingPoint = True
