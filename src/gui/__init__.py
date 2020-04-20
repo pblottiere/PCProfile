@@ -21,5 +21,7 @@ __email__ = "blottiere.paul@gmail.com"
 __license__ = "GPLv3"
 
 
+from .view import View
+from .chart import Chart
 from .select import SelectDock
 from .maptool import ProfileMapTool

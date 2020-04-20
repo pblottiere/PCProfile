@@ -20,15 +20,13 @@ __date__ = "2020/04/19"
 __email__ = "blottiere.paul@gmail.com"
 __license__ = "GPLv3"
 
+import os
 
-from qgis.gui import QgsMapToolEmitPoint, QgsRubberBand, QgsMapTool
-from qgis.core import Qgis, QgsWkbTypes, QgsPointXY, QgsRectangle, QgsMessageLog, QgsDataSourceUri, QgsProject
-from qgis.PyQt.QtCore import Qt, QUrl, pyqtProperty, pyqtSignal, pyqtSlot
-from qgis.PyQt.QtGui import QColor
-from qgis.PyQt.QtSql import *
 from PyQt5.QtQuick import QQuickView
+
+from qgis.PyQt.QtGui import QColor
+from qgis.PyQt.QtCore import Qt, QUrl
 from qgis.PyQt.QtWidgets import QWidget, QDockWidget
-import json
 
 
 class View(object):

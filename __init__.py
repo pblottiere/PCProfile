@@ -26,7 +26,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction
 
 from .resources import *
-from .src.gui import ProfileMapTool, SelectDock
+from .src.gui import ProfileMapTool, SelectDock, View, Chart
 
 
 def classFactory(iface):
@@ -50,6 +50,9 @@ class MinimalPlugin:
 
         self.iface.currentLayerChanged.connect(self.update_visibility)
         self.update_visibility()
+
+        self.chart = Chart(self.iface.mapCanvas())
+        self.view = View(self.iface, self.chart)
 
     def update_visibility(self):
         enable = False

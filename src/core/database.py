@@ -22,7 +22,7 @@ __license__ = "GPLv3"
 
 
 from qgis.gui import QgsMapToolEmitPoint, QgsRubberBand, QgsMapTool
-from qgis.core import Qgis, QgsWkbTypes, QgsPointXY, QgsRectangle, QgsMessageLog, QgsDataSourceUri, QgsProject
+from qgis.core import Qgis, QgsWkbTypes, QgsPointXY, QgsRectangle, QgsMessageLog, QgsDataSourceUri, QgsProject, QgsMessageLog
 from qgis.PyQt.QtCore import Qt, QUrl, pyqtProperty, pyqtSignal, pyqtSlot
 from qgis.PyQt.QtGui import QColor
 from qgis.PyQt.QtSql import *
@@ -30,9 +30,14 @@ from PyQt5.QtQuick import QQuickView
 from qgis.PyQt.QtWidgets import QWidget, QDockWidget
 import json
 
-TABLE="terrain"
-# SRID=32620
 SRID=32616
+
+
+class Point(object):
+
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
 
 class Database(object):
 
@@ -55,8 +60,9 @@ class Database(object):
         QSqlDatabase.removeDatabase(self.name)
 
     def dimensions(self):
-        q = "SELECT PC_Summary(pa) FROM {} LIMIT 1".format(TABLE)
-        query = QSqlQuery(db)
+        table = self.uri.table()
+        q = "SELECT PC_Summary(pa) FROM {} LIMIT 1".format(table)
+        query = QSqlQuery(self.db)
         query.prepare(q)
         query.exec_()
         query.next()
@@ -70,7 +76,8 @@ class Database(object):
         return None
 
     def intersects_patchs_id(self, wkt):
-        q = "select id from {} where pc_intersects('{}'::geometry, pa)".format(TABLE, wkt)
+        table = self.uri.table()
+        q = "select id from {} where pc_intersects('{}'::geometry, pa)".format(table, wkt)
         query = QSqlQuery(self.db)
         query.prepare(q)
         query.exec_()
@@ -80,35 +87,48 @@ class Database(object):
             record = query.record()
             pcids.append(record.value("id"))
 
-    def intersects_points(self, wkt):
-        for pcid in self.inertsects_patchs_id(wkt):
-            q = "select pc_get(pc_explode(pc_intersection(pa, '{}'::geometry))) from {} where id = {}".format(wkt, TABLE, pcid)
+        return pcids
 
-            query = QSqlQuery(db)
+    def intersects_points(self, wkt):
+        table = self.uri.table()
+        points = []
+        xmin = None
+        xmax = None
+        zmin = None
+        zmax = None
+
+        xindex = self.dimension_index("x")
+        zindex = self.dimension_index("z")
+
+        for pcid in self.intersects_patchs_id(wkt):
+            q = "select pc_get(pc_explode(pc_intersection(pa, '{}'::geometry))) from {} where id = {}".format(wkt, table, pcid)
+
+            query = QSqlQuery(self.db)
             query.prepare(q)
             query.exec_()
 
-        #     while query.next():
-        #         val = query.record().value(0)
-        #         val = val.replace('{', '').replace('}', '').split(',')
+            while query.next():
+                val = query.record().value(0)
+                val = val.replace('{', '').replace('}', '').split(',')
 
-        #         x = float(val[xindex])
-        #         z = float(val[zindex])
+                x = float(val[xindex])
+                z = float(val[zindex])
 
-        #         if not self._xmin or x < self._xmin:
-        #             self._xmin = x
+                if not xmin or x < xmin:
+                    xmin = x
 
-        #         if not self._xmax or x > self._xmax:
-        #             self._xmax = x
+                if not xmax or x > xmax:
+                    xmax = x
 
-        #         if not self._zmin or z < self._zmin:
-        #             self._zmin = z
+                if not zmin or z < zmin:
+                    zmin = z
 
-        #         if not self._zmax or z > self._zmax:
-        #             self._zmax = z
+                if not zmax or z > zmax:
+                    zmax = z
 
-        #         zvalues.append(z)
-        #         xvalues.append(x)
+                points.append(Point(x, z))
+
+        return points
 
         # total = len(xvalues)
         # step = 1

@@ -22,8 +22,15 @@ __license__ = "GPLv3"
 
 from qgis.PyQt.QtGui import QColor
 
-from qgis.core import QgsWkbTypes, QgsPointXY, QgsRectangle, Qgis
+from qgis.core import (QgsWkbTypes,
+                       QgsPointXY,
+                       QgsRectangle,
+                       Qgis,
+                       QgsMessageLog,
+                       QgsDataSourceUri)
 from qgis.gui import QgsMapToolEmitPoint, QgsRubberBand, QgsMapTool
+
+from PCProfile.src.core import Database
 
 # from qgis.core import Qgis, QgsWkbTypes, QgsPointXY, QgsRectangle, QgsMessageLog, QgsDataSourceUri, QgsProject
 # from qgis.PyQt.QtCore import Qt, QUrl, pyqtProperty, pyqtSignal, pyqtSlot
@@ -50,22 +57,24 @@ class ProfileMapTool(QgsMapToolEmitPoint):
         self.rubberBand.reset(True)
 
     def canvasPressEvent(self, e):
-        uri = self.iface.activeLayer().dataProvider().dataSourceUri()
-        if "(pa)" not in uri:
-            msg = "The active layer is not based on pgpointcloud"
-            level = Qgis.Warning
-            self.iface.messageBar().pushMessage("PCProfile", msg, level=level)
-
         self.startPoint = self.toMapCoordinates(e.pos())
         self.endPoint = self.startPoint
         self.isEmittingPoint = True
         self.showRect(self.startPoint, self.endPoint)
 
     def canvasReleaseEvent(self, e):
+        if not self.rectangle():
+            return
+
         self.isEmittingPoint = False
-        r = self.rectangle()
-        if r is not None:
-            print("Rectangle:", r.xMinimum(), r.yMinimum(), r.xMaximum(), r.yMaximum())
+
+        provider = self.iface.activeLayer().dataProvider()
+        uri = QgsDataSourceUri(provider.dataSourceUri())
+        db = Database(uri)
+        db.open()
+        wkt = "SRID=32616;{}".format(self.rectangle().asWktPolygon())
+        points = db.intersects_points(wkt)
+        db.close()
 
     def canvasMoveEvent(self, e):
         if not self.isEmittingPoint:

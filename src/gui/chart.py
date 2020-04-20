@@ -23,7 +23,7 @@ __license__ = "GPLv3"
 
 from qgis.gui import QgsMapToolEmitPoint, QgsRubberBand, QgsMapTool
 from qgis.core import Qgis, QgsWkbTypes, QgsPointXY, QgsRectangle, QgsMessageLog, QgsDataSourceUri, QgsProject
-from qgis.PyQt.QtCore import Qt, QUrl, pyqtProperty, pyqtSignal, pyqtSlot
+from qgis.PyQt.QtCore import Qt, QUrl, pyqtProperty, pyqtSignal, pyqtSlot, QObject
 from qgis.PyQt.QtGui import QColor
 from qgis.PyQt.QtSql import *
 from PyQt5.QtQuick import QQuickView
@@ -35,7 +35,11 @@ class Chart(QObject):
     updated = pyqtSignal()
     fake = pyqtSignal()
 
-    def __init__(self):
+    def __init__(self, canvas):
+        super().__init__()
+
+        self.canvas = canvas
+
         self._points_x = {}
         self._points_y = {}
 
@@ -47,11 +51,11 @@ class Chart(QObject):
     @pyqtProperty(float, notify=fake)
     def xmin(self):
         # return self._xmin
-        return self.iface.mapCanvas().extent().xMinimum()
+        return self.canvas.extent().xMinimum()
 
     @pyqtProperty(float, notify=fake)
     def xmax(self):
-        return self.iface.mapCanvas().extent().xMaximum()
+        return self.canvas.extent().xMaximum()
         # return self._xmax
 
     @pyqtProperty(float, notify=fake)
