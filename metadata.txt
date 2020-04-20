@@ -15,7 +15,7 @@ tags=pointcloud,profile,postgresql
 
 homepage=https://github.com/pblottiere/PCProfile
 category=Plugins
-icon=icon.png
+icon=pcprofile.png
 experimental=False
 
 deprecated=False

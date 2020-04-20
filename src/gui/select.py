@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 """
+QGIS Plugin for monitoring performances.
+
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2 of the License, or
@@ -21,5 +23,15 @@ __email__ = "blottiere.paul@gmail.com"
 __license__ = "GPLv3"
 
 
-from .select import SelectDock
-from .maptool import ProfileMapTool
+import os
+from PyQt5 import QtCore, QtWidgets, uic
+
+
+FORM_CLASS, _ = uic.loadUiType(os.path.join(
+    os.path.dirname(__file__), 'ui/select.ui'))
+
+class SelectDock(QtWidgets.QDockWidget, FORM_CLASS):
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
