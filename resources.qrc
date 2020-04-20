@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/plugins/pcprofile" >
+        <file>pcprofile.png</file>
+    </qresource>
+</RCC>
