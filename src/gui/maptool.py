@@ -32,14 +32,6 @@ from qgis.gui import QgsMapToolEmitPoint, QgsRubberBand, QgsMapTool
 
 from PCProfile.src.core import Database
 
-# from qgis.core import Qgis, QgsWkbTypes, QgsPointXY, QgsRectangle, QgsMessageLog, QgsDataSourceUri, QgsProject
-# from qgis.PyQt.QtCore import Qt, QUrl, pyqtProperty, pyqtSignal, pyqtSlot
-# from qgis.PyQt.QtGui import QColor
-# from qgis.PyQt.QtSql import *
-# from PyQt5.QtQuick import QQuickView
-# from qgis.PyQt.QtWidgets import QWidget, QDockWidget
-# import json
-
 
 class ProfileMapTool(QgsMapToolEmitPoint):
 
@@ -49,13 +41,18 @@ class ProfileMapTool(QgsMapToolEmitPoint):
         QgsMapToolEmitPoint.__init__(self, self.iface.mapCanvas())
         self.rubberBand = QgsRubberBand(self.iface.mapCanvas(), True)
         self.rubberBand.setColor(QColor(255, 0, 0, 100))
-        self.rubberBand.setWidth(1)
+        self.rubberBand.setWidth(2)
+
+        self.rubberBand2 = QgsRubberBand(self.iface.mapCanvas(), True)
+        self.rubberBand2.setColor(QColor(255, 0, 0, 50))
+
         self.reset()
 
     def reset(self):
         self.startPoint = self.endPoint = None
         self.isEmittingPoint = False
         self.rubberBand.reset(True)
+        self.rubberBand2.reset(True)
 
     def canvasPressEvent(self, e):
         self.startPoint = self.toMapCoordinates(e.pos())
@@ -65,6 +62,7 @@ class ProfileMapTool(QgsMapToolEmitPoint):
 
     def canvasReleaseEvent(self, e):
         self.isEmittingPoint = False
+
         if not self.rectangle():
             return
 
@@ -73,7 +71,7 @@ class ProfileMapTool(QgsMapToolEmitPoint):
         db = Database(uri)
         db.open()
         wkt = "SRID=32616;{}".format(self.rectangle().asWktPolygon())
-        points, xmin, xmax, zmin, zmax = db.intersects_points(wkt)
+        points, xmin, xmax, zmin, zmax = db.intersects_points(self.startPoint, wkt)
         db.close()
 
         self.chart.update(points, xmin, xmax, zmin, zmax)
@@ -84,18 +82,49 @@ class ProfileMapTool(QgsMapToolEmitPoint):
         self.endPoint = self.toMapCoordinates(e.pos())
         self.showRect(self.startPoint, self.endPoint)
 
+    def parallel(self, start, end, delta):
+        x1,y1 = QgsPointXY(start)
+        x2,y2 = QgsPointXY(end)
+        length = start.distance(end)
+
+        x1p = x1 + delta * ((y2-y1) / length)
+        x2p = x2 + delta * ((y2-y1) / length)
+        y1p = y1 + delta * ((x1-x2) / length)
+        y2p = y2 + delta * ((x1-x2) / length)
+
+        return QgsPointXY(x1p,y1p), QgsPointXY(x2p,y2p)
+
     def showRect(self, startPoint, endPoint):
-        self.rubberBand.reset(QgsWkbTypes.PolygonGeometry)
+        self.rubberBand.reset(QgsWkbTypes.LineGeometry)
+        self.rubberBand2.reset(QgsWkbTypes.PolygonGeometry)
         if startPoint.x() == endPoint.x() or startPoint.y() == endPoint.y():
             return
+
+        # rectangle
+        start2, end2 = self.parallel(startPoint, endPoint, 0.5)
+        start3, end3 = self.parallel(startPoint, endPoint, -0.5)
+
+        point1 = QgsPointXY(start2.x(), start2.y())
+        point2 = QgsPointXY(end2.x(), end2.y())
+        point3 = QgsPointXY(start3.x(), start3.y())
+        point4 = QgsPointXY(end3.x(), end3.y())
+
+        self.rubberBand2.addPoint(point1, False)
+        self.rubberBand2.addPoint(point2, False)
+        self.rubberBand2.addPoint(point4, False)
+        self.rubberBand2.addPoint(point3, True) # true to update canvas
+        self.rubberBand2.show()
+
+        self.start_point_rect = point1
+        self.end_point_rect = point4
+
+        # center line
         point1 = QgsPointXY(startPoint.x(), startPoint.y())
         point2 = QgsPointXY(startPoint.x(), endPoint.y())
         point3 = QgsPointXY(endPoint.x(), endPoint.y())
         point4 = QgsPointXY(endPoint.x(), startPoint.y())
         self.rubberBand.addPoint(point1, False)
-        self.rubberBand.addPoint(point2, False)
-        self.rubberBand.addPoint(point3, False)
-        self.rubberBand.addPoint(point4, True) # true to update canvas
+        self.rubberBand.addPoint(point3, True)
         self.rubberBand.show()
 
     def rectangle(self):
@@ -104,7 +133,7 @@ class ProfileMapTool(QgsMapToolEmitPoint):
         elif self.startPoint.x() == self.endPoint.x() or self.startPoint.y() == self.endPoint.y():
             return None
 
-        return QgsRectangle(self.startPoint, self.endPoint)
+        return QgsRectangle(self.start_point_rect, self.end_point_rect)
 
     def deactivate(self):
         QgsMapTool.deactivate(self)

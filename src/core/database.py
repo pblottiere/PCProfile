@@ -89,7 +89,7 @@ class Database(object):
 
         return pcids
 
-    def intersects_points(self, wkt):
+    def intersects_points(self, origin, wkt):
         table = self.uri.table()
         points = []
         xmin = None
@@ -98,6 +98,7 @@ class Database(object):
         zmax = None
 
         xindex = self.dimension_index("x")
+        yindex = self.dimension_index("y")
         zindex = self.dimension_index("z")
 
         for pcid in self.intersects_patchs_id(wkt):
@@ -112,7 +113,11 @@ class Database(object):
                 val = val.replace('{', '').replace('}', '').split(',')
 
                 x = float(val[xindex])
+                y = float(val[yindex])
                 z = float(val[zindex])
+
+                pt = QgsPointXY(x, y)
+                x = origin.distance(pt)
 
                 if not xmin or x < xmin:
                     xmin = x
