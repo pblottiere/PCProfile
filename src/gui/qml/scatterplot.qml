@@ -27,7 +27,7 @@ ChartView {
     useOpenGL: true
     axisX: axisX
     axisY: axisY
-    markerSize: 4.0
+    markerSize: pychart.marker_size
     borderWidth: 0
   }
 

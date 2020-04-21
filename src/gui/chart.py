@@ -33,6 +33,7 @@ import json
 
 class Chart(QObject):
     updated = pyqtSignal()
+    update_marker_size = pyqtSignal()
     fake = pyqtSignal()
 
     def __init__(self, canvas):
@@ -47,6 +48,12 @@ class Chart(QObject):
         self._xmax = 10
         self._zmin = 0
         self._zmax = 10
+
+        self._marker_size = 4.0
+
+    @pyqtProperty(float, notify=update_marker_size)
+    def marker_size(self):
+        return self._marker_size
 
     @pyqtProperty(float, notify=fake)
     def xmin(self):
@@ -75,6 +82,10 @@ class Chart(QObject):
     @pyqtProperty('QVariantMap')
     def points_y(self):
         return self._points_y
+
+    def set_marker_size(self, size):
+        self._marker_size = size
+        self.update_marker_size.emit()
 
     def update(self, points, xmin, xmax, zmin, zmax):
         self._xmin = xmin

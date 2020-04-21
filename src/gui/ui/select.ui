@@ -33,7 +33,14 @@
          </widget>
         </item>
         <item>
-         <widget class="QDoubleSpinBox" name="size"/>
+         <widget class="QDoubleSpinBox" name="size">
+          <property name="decimals">
+           <number>1</number>
+          </property>
+          <property name="value">
+           <double>4.000000000000000</double>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -53,7 +60,7 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="apply">
+         <widget class="QPushButton" name="apply_btn">
           <property name="text">
            <string>Apply</string>
           </property>

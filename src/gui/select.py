@@ -34,6 +34,11 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 
 class SelectDock(QtWidgets.QDockWidget, FORM_CLASS):
 
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def __init__(self, chart):
+        super().__init__()
+        self.chart = chart
         self.setupUi(self)
+        self.apply_btn.clicked.connect(self.apply)
+
+    def apply(self):
+        self.chart.set_marker_size(self.size.value())

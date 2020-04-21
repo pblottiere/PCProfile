@@ -49,3 +49,6 @@ class View(object):
 
     def show(self):
         self.widget.show()
+
+    def hide(self):
+        self.widget.hide()
