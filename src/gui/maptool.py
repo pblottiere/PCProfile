@@ -38,6 +38,7 @@ class ProfileMapTool(QgsMapToolEmitPoint):
     def __init__(self, iface, chart):
         self.iface = iface
         self.chart = chart
+        self.broke_size = 1.0
         QgsMapToolEmitPoint.__init__(self, self.iface.mapCanvas())
         self.rubberBand = QgsRubberBand(self.iface.mapCanvas(), True)
         self.rubberBand.setColor(QColor(255, 0, 0, 100))
@@ -71,7 +72,7 @@ class ProfileMapTool(QgsMapToolEmitPoint):
         db = Database(uri)
         db.open()
         wkt = "SRID=32616;{}".format(self.rectangle().asWktPolygon())
-        points, xmin, xmax, zmin, zmax = db.intersects_points(self.startPoint, wkt)
+        points, xmin, xmax, zmin, zmax = db.intersects_points(self.startPoint, self.endPoint, wkt)
         db.close()
 
         self.chart.update(points, xmin, xmax, zmin, zmax)
@@ -101,8 +102,8 @@ class ProfileMapTool(QgsMapToolEmitPoint):
             return
 
         # rectangle
-        start2, end2 = self.parallel(startPoint, endPoint, 0.5)
-        start3, end3 = self.parallel(startPoint, endPoint, -0.5)
+        start2, end2 = self.parallel(startPoint, endPoint, self.broke_size/2)
+        start3, end3 = self.parallel(startPoint, endPoint, -self.broke_size/2)
 
         point1 = QgsPointXY(start2.x(), start2.y())
         point2 = QgsPointXY(end2.x(), end2.y())

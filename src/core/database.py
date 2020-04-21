@@ -22,7 +22,7 @@ __license__ = "GPLv3"
 
 
 from qgis.gui import QgsMapToolEmitPoint, QgsRubberBand, QgsMapTool
-from qgis.core import Qgis, QgsWkbTypes, QgsPointXY, QgsRectangle, QgsMessageLog, QgsDataSourceUri, QgsProject, QgsMessageLog
+from qgis.core import Qgis, QgsWkbTypes, QgsPointXY, QgsRectangle, QgsMessageLog, QgsDataSourceUri, QgsProject, QgsMessageLog, QgsGeometryUtils, QgsPoint
 from qgis.PyQt.QtCore import Qt, QUrl, pyqtProperty, pyqtSignal, pyqtSlot
 from qgis.PyQt.QtGui import QColor
 from qgis.PyQt.QtSql import *
@@ -89,7 +89,7 @@ class Database(object):
 
         return pcids
 
-    def intersects_points(self, origin, wkt):
+    def intersects_points(self, start, end, wkt):
         table = self.uri.table()
         points = []
         xmin = None
@@ -100,6 +100,14 @@ class Database(object):
         xindex = self.dimension_index("x")
         yindex = self.dimension_index("y")
         zindex = self.dimension_index("z")
+
+        start_pt = QgsPoint()
+        start_pt.setX(start.x())
+        start_pt.setY(start.y())
+
+        end_pt = QgsPoint()
+        end_pt.setX(end.x())
+        end_pt.setY(end.y())
 
         for pcid in self.intersects_patchs_id(wkt):
             q = "select pc_get(pc_explode(pc_intersection(pa, '{}'::geometry))) from {} where id = {}".format(wkt, table, pcid)
@@ -116,8 +124,13 @@ class Database(object):
                 y = float(val[yindex])
                 z = float(val[zindex])
 
-                pt = QgsPointXY(x, y)
-                x = origin.distance(pt)
+                pt = QgsPoint()
+                pt.setX(x)
+                pt.setY(y)
+
+                s = QgsGeometryUtils.perpendicularSegment(pt, start_pt, end_pt)
+                p = s.pointN(-1)
+                x = start.distance(QgsPointXY(p.x(), p.y()))
 
                 if not xmin or x < xmin:
                     xmin = x

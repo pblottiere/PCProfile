@@ -51,7 +51,7 @@ class MinimalPlugin:
         self.view.hide()
         self.tool = ProfileMapTool(self.iface, self.chart)
 
-        self.dock = SelectDock(self.chart)
+        self.dock = SelectDock(self.chart, self.tool)
         self.iface.addDockWidget(Qt.LeftDockWidgetArea, self.dock)
 
     def update_visibility(self):

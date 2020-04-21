@@ -34,11 +34,16 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 
 class SelectDock(QtWidgets.QDockWidget, FORM_CLASS):
 
-    def __init__(self, chart):
+    def __init__(self, chart, maptool):
         super().__init__()
         self.chart = chart
+        self.maptool = maptool
         self.setupUi(self)
-        self.apply_btn.clicked.connect(self.apply)
+        self.size.valueChanged.connect(self.marker_size)
+        self.broke.valueChanged.connect(self.broke_size)
 
-    def apply(self):
+    def marker_size(self):
         self.chart.set_marker_size(self.size.value())
+
+    def broke_size(self):
+        self.maptool.broke_size = self.broke.value()
