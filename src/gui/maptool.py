@@ -38,6 +38,7 @@ class ProfileMapTool(QgsMapToolEmitPoint):
     def __init__(self, iface, chart):
         self.iface = iface
         self.chart = chart
+        self._debug = False
         self.broke_size = 1.0
         QgsMapToolEmitPoint.__init__(self, self.iface.mapCanvas())
         self.rubberBand = QgsRubberBand(self.iface.mapCanvas(), True)
@@ -71,11 +72,16 @@ class ProfileMapTool(QgsMapToolEmitPoint):
         uri = QgsDataSourceUri(provider.dataSourceUri())
         db = Database(uri)
         db.open()
-        wkt = "SRID=32616;{}".format(self.rectangle().asWktPolygon())
-        points, xmin, xmax, zmin, zmax = db.intersects_points(self.startPoint, self.endPoint, wkt)
+        polygon = self.rubberBand2.asGeometry()
+        wkt = "SRID=32616;{}".format(polygon.asWkt())
+        points, xmin, xmax, zmin, zmax, pcids = db.intersects_points(self.startPoint, self.endPoint, wkt)
         db.close()
 
         self.chart.update(points, xmin, xmax, zmin, zmax)
+
+        if self._debug:
+            self.iface.activeLayer().removeSelection()
+            self.iface.activeLayer().select(pcids)
 
     def canvasMoveEvent(self, e):
         if not self.isEmittingPoint:

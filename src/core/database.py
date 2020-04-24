@@ -109,7 +109,8 @@ class Database(object):
         end_pt.setX(end.x())
         end_pt.setY(end.y())
 
-        for pcid in self.intersects_patchs_id(wkt):
+        pcids = self.intersects_patchs_id(wkt)
+        for pcid in pcids:
             q = "select pc_get(pc_explode(pc_intersection(pa, '{}'::geometry))) from {} where id = {}".format(wkt, table, pcid)
 
             query = QSqlQuery(self.db)
@@ -146,4 +147,4 @@ class Database(object):
 
                 points.append(Point(x, z))
 
-        return points, xmin, xmax, zmin, zmax
+        return points, xmin, xmax, zmin, zmax, pcids
