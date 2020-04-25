@@ -43,6 +43,10 @@ class SelectDock(QtWidgets.QDockWidget, FORM_CLASS):
         self.broke.valueChanged.connect(self.broke_size)
         self.render.currentIndexChanged.connect(self.render_color)
         self.scaled.stateChanged.connect(self.scaled_changed)
+        self.budget.valueChanged.connect(self.budget_changed)
+
+    def budget_changed(self):
+        self.chart.set_budget(self.budget.value())
 
     def scaled_changed(self):
         self.chart.set_scaled(self.scaled.isChecked())

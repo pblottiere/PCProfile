@@ -43,7 +43,7 @@ class Chart(QObject):
         super().__init__()
 
         self.canvas = canvas
-
+        self._points = []
         self._points_x = {}
         self._points_y = {}
 
@@ -52,6 +52,7 @@ class Chart(QObject):
         self._zmin = 0
         self._zmax = 10
 
+        self._budget = 100000
         self._scaled = True
         self._marker_size = 2.0
         self._ramp = Ramp("elevation")
@@ -100,6 +101,11 @@ class Chart(QObject):
         self._scaled = status
         self.updated.emit()
 
+    def set_budget(self, n):
+        self._budget = n
+        self.sample()
+        self.updated.emit()
+
     def set_color(self, name):
         self._ramp = Ramp(name)
         self.color.emit()
@@ -108,24 +114,19 @@ class Chart(QObject):
         self._marker_size = size
         self.update_marker_size.emit()
 
-    def update(self, points, xmin, xmax, zmin, zmax):
-        self._xmin = xmin
-        self._xmax = xmax
-        self._zmin = zmin
-        self._zmax = zmax
-
-        total = len(points)
+    def sample(self):
+        total = len(self._points)
         step = 1
-        treshold = 100000
-        if total > treshold:
-            perc = 100*treshold/total
+        if total > self._budget:
+            perc = 100*self._budget/total
             n = perc*total/100
-            step =int(total / n)
+            step = int(total / n)
 
         step_i = 0
+
         self._points_x = {}
         self._points_y = {}
-        for i, point in enumerate(points):
+        for i, point in enumerate(self._points):
             if step_i == 0:
                 self._points_x[str(i)] = point.x
                 self._points_y[str(i)] = point.y
@@ -134,4 +135,11 @@ class Chart(QObject):
             if step_i == step:
                 step_i = 0
 
+    def update(self, points, xmin, xmax, zmin, zmax):
+        self._xmin = xmin
+        self._xmax = xmax
+        self._zmin = zmin
+        self._zmax = zmax
+        self._points = points
+        self.sample()
         self.updated.emit()
