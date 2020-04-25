@@ -52,6 +52,7 @@ class Chart(QObject):
         self._zmin = 0
         self._zmax = 10
 
+        self._scaled = True
         self._marker_size = 2.0
         self._ramp = Ramp("elevation")
 
@@ -63,14 +64,16 @@ class Chart(QObject):
     def marker_size(self):
         return self._marker_size
 
+    @pyqtProperty(bool, notify=fake)
+    def is_scaled(self):
+        return self._scaled
+
     @pyqtProperty(float, notify=fake)
     def xmin(self):
         return self._xmin
-        # return self.canvas.extent().xMinimum()
 
     @pyqtProperty(float, notify=fake)
     def xmax(self):
-        # return self.canvas.extent().xMaximum()
         return self._xmax
 
     @pyqtProperty(float, notify=fake)
@@ -92,6 +95,10 @@ class Chart(QObject):
     @pyqtSlot(str)
     def log_from_qml(self, param):
         print(param)
+
+    def set_scaled(self, status):
+        self._scaled = status
+        self.updated.emit()
 
     def set_color(self, name):
         self._ramp = Ramp(name)

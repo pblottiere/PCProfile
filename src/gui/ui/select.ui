@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>282</width>
-    <height>128</height>
+    <height>235</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,79 +19,127 @@
      <number>9</number>
     </property>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
       <property name="bottomMargin">
        <number>0</number>
       </property>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_2">
-        <item>
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Broke</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QDoubleSpinBox" name="broke">
-          <property name="decimals">
-           <number>1</number>
-          </property>
-          <property name="value">
-           <double>3.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Marker size</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QDoubleSpinBox" name="size">
-          <property name="decimals">
-           <number>1</number>
-          </property>
-          <property name="value">
-           <double>2.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </item>
-      <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <property name="bottomMargin">
-         <number>0</number>
+       <widget class="QGroupBox" name="groupBox">
+        <property name="title">
+         <string>Map tool</string>
         </property>
-        <item>
-         <widget class="QLabel" name="label_3">
-          <property name="text">
-           <string>Rendering</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="render">
-          <item>
-           <property name="text">
-            <string>Elevation</string>
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <item>
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Broke</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="broke">
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <double>3.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="title">
+         <string>Profile</string>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_4">
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <property name="bottomMargin">
+            <number>0</number>
            </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Single color</string>
+           <item>
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Scaled</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="scaled">
+             <property name="layoutDirection">
+              <enum>Qt::RightToLeft</enum>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Marker size</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDoubleSpinBox" name="size">
+             <property name="decimals">
+              <number>1</number>
+             </property>
+             <property name="value">
+              <double>2.000000000000000</double>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <property name="bottomMargin">
+            <number>0</number>
            </property>
-          </item>
-         </widget>
-        </item>
-       </layout>
+           <item>
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Colorization</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QComboBox" name="render">
+             <item>
+              <property name="text">
+               <string>Elevation</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Single</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </widget>
       </item>
      </layout>
     </item>

@@ -167,15 +167,21 @@ ChartView {
     axisY.min = pychart.zmin
 
     var step = (pychart.zmax - pychart.zmin) / 12
-    var ratio_x = (pychart.xmax - pychart.xmin) / chart.plotArea.width
-    var ratio_z = (pychart.zmax-pychart.zmin) / chart.plotArea.height
 
-    if (ratio_x > ratio_z) {
-      axisX.max = pychart.xmax
-      axisY.max = pychart.zmin + ratio_x * chart.plotArea.height
+    if (pychart.is_scaled) {
+      var ratio_x = (pychart.xmax - pychart.xmin) / chart.plotArea.width
+      var ratio_z = (pychart.zmax-pychart.zmin) / chart.plotArea.height
+
+      if (ratio_x > ratio_z) {
+        axisX.max = pychart.xmax
+        axisY.max = pychart.zmin + ratio_x * chart.plotArea.height
+      } else {
+        axisX.max = pychart.xmin + ratio_z * chart.plotArea.width
+        axisY.max = pychart.zmax
+      }
     } else {
-      axisX.max = pychart.xmin + ratio_z * chart.plotArea.width
-      axisY.max = pychart.zmax
+        axisX.max = pychart.xmax
+        axisY.max = pychart.zmax
     }
 
     var points_x = pychart.points_x
