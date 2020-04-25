@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>314</width>
-    <height>103</height>
+    <width>282</width>
+    <height>128</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <number>9</number>
     </property>
     <item>
-     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1">
+     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0">
       <property name="bottomMargin">
        <number>0</number>
       </property>
@@ -38,7 +38,7 @@
            <number>1</number>
           </property>
           <property name="value">
-           <double>1.000000000000000</double>
+           <double>3.000000000000000</double>
           </property>
          </widget>
         </item>
@@ -59,8 +59,36 @@
            <number>1</number>
           </property>
           <property name="value">
-           <double>4.000000000000000</double>
+           <double>2.000000000000000</double>
           </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="label_3">
+          <property name="text">
+           <string>Rendering</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="render">
+          <item>
+           <property name="text">
+            <string>Elevation</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Single color</string>
+           </property>
+          </item>
          </widget>
         </item>
        </layout>

@@ -30,9 +30,12 @@ from PyQt5.QtQuick import QQuickView
 from qgis.PyQt.QtWidgets import QWidget, QDockWidget
 import json
 
+from PCProfile.src.core import Ramp
+
 
 class Chart(QObject):
     updated = pyqtSignal()
+    color = pyqtSignal()
     update_marker_size = pyqtSignal()
     fake = pyqtSignal()
 
@@ -49,7 +52,12 @@ class Chart(QObject):
         self._zmin = 0
         self._zmax = 10
 
-        self._marker_size = 4.0
+        self._marker_size = 2.0
+        self._ramp = Ramp("elevation")
+
+    @pyqtSlot(str, result='QColor')
+    def ramp_color(self, step):
+        return self._ramp.values[int(step)]
 
     @pyqtProperty(float, notify=update_marker_size)
     def marker_size(self):
@@ -84,6 +92,10 @@ class Chart(QObject):
     @pyqtSlot(str)
     def log_from_qml(self, param):
         print(param)
+
+    def set_color(self, name):
+        self._ramp = Ramp(name)
+        self.color.emit()
 
     def set_marker_size(self, size):
         self._marker_size = size

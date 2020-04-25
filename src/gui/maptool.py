@@ -39,7 +39,7 @@ class ProfileMapTool(QgsMapToolEmitPoint):
         self.iface = iface
         self.chart = chart
         self._debug = False
-        self.broke_size = 1.0
+        self.broke_size = 3.0
         QgsMapToolEmitPoint.__init__(self, self.iface.mapCanvas())
         self.rubberBand = QgsRubberBand(self.iface.mapCanvas(), True)
         self.rubberBand.setColor(QColor(255, 0, 0, 100))

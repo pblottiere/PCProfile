@@ -41,6 +41,10 @@ class SelectDock(QtWidgets.QDockWidget, FORM_CLASS):
         self.setupUi(self)
         self.size.valueChanged.connect(self.marker_size)
         self.broke.valueChanged.connect(self.broke_size)
+        self.render.currentIndexChanged.connect(self.render_color)
+
+    def render_color(self):
+        self.chart.set_color(self.render.currentText())
 
     def marker_size(self):
         self.chart.set_marker_size(self.size.value())
