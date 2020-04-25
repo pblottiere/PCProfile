@@ -2,17 +2,19 @@ import QtCharts 2.0
 import QtQuick 2.0
 
 ChartView {
+  id: chart
   antialiasing: true
-  title: "PointCloud Profile"
-  titleColor: "white"
   backgroundColor: "#404040"
-  legend.labelColor: "white"
+  legend.visible: false
 
   ValueAxis {
       id: axisX
       min: pychart.xmin
       max: pychart.xmax
+      labelsVisible: true
       tickCount: 1
+      minorTickCount: 1
+      labelsColor: "red"
   }
 
   ValueAxis {
@@ -20,6 +22,7 @@ ChartView {
       min: pychart.zmin
       max: pychart.zmax
       tickCount: 1
+      labelsColor: "red"
   }
 
   ScatterSeries {
@@ -37,11 +40,20 @@ ChartView {
 
   function addPoints() {
     scatter2.clear()
-    axisX.min = pychart.xmin
-    axisX.max = pychart.xmax
 
+    axisX.min = pychart.xmin
     axisY.min = pychart.zmin
-    axisY.max = pychart.zmax
+
+    var ratio_x = (pychart.xmax - pychart.xmin) / chart.plotArea.width
+    var ratio_z = (pychart.zmax-pychart.zmin) / chart.plotArea.height
+
+    if (ratio_x > ratio_z) {
+      axisX.max = pychart.xmax
+      axisY.max = pychart.zmin + ratio_x * chart.plotArea.height
+    } else {
+      axisX.max = pychart.xmin + ratio_z * chart.plotArea.width
+      axisY.max = pychart.zmax
+    }
 
     var points_x = pychart.points_x
     var points_y = pychart.points_y

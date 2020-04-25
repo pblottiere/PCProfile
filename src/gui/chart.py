@@ -67,12 +67,10 @@ class Chart(QObject):
 
     @pyqtProperty(float, notify=fake)
     def zmax(self):
-        print(self._zmax)
         return self._zmax + 1
 
     @pyqtProperty(float, notify=fake)
     def zmin(self):
-        print(self._zmin)
         return self._zmin - 1
 
     @pyqtProperty('QVariantMap')
@@ -82,6 +80,10 @@ class Chart(QObject):
     @pyqtProperty('QVariantMap')
     def points_y(self):
         return self._points_y
+
+    @pyqtSlot(str)
+    def log_from_qml(self, param):
+        print(param)
 
     def set_marker_size(self, size):
         self._marker_size = size

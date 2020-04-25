@@ -38,13 +38,13 @@ class View(object):
         self.view = QQuickView()
         self.view.setResizeMode(QQuickView.SizeRootObjectToView)
         self.view.rootContext().setContextProperty("pychart", chart)
-        self.view.setColor(QColor("#404040"))
+        # self.view.setColor(QColor("#404040"))
+        self.view.setColor(QColor("#000000"))
         self.view.setSource(QUrl.fromLocalFile(qml))
 
         self.container = QWidget.createWindowContainer(self.view)
         self.widget = QDockWidget()
         self.widget.setWidget(self.container)
-        self.widget.setMinimumHeight(300)
         iface.addDockWidget(Qt.BottomDockWidgetArea, self.widget)
 
     def show(self):
