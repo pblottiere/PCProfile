@@ -145,10 +145,6 @@ ChartView {
     borderWidth: 0
   }
 
-  Component.onCompleted: {
-    addPoints()
-  }
-
   function addPoints() {
     serie0.clear()
     serie1.clear()
