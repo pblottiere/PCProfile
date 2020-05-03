@@ -50,9 +50,19 @@ class MinimalPlugin:
         self.view = View(self.iface, self.chart)
         self.view.hide()
         self.tool = ProfileMapTool(self.iface, self.chart)
+        self.tool.fetching.connect(self.fetching)
+        self.tool.fetched.connect(self.fetched)
 
         self.dock = SelectDock(self.chart, self.tool)
         self.iface.addDockWidget(Qt.LeftDockWidgetArea, self.dock)
+
+    def fetching(self):
+        self.dock.setEnabled(False)
+        self.action.setEnabled(False)
+
+    def fetched(self):
+        self.dock.setEnabled(True)
+        self.action.setEnabled(True)
 
     def update_visibility(self):
         enable = False

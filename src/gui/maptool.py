@@ -67,6 +67,9 @@ class PointsFetcher(QObject, Thread):
 
 class ProfileMapTool(QgsMapToolEmitPoint):
 
+    fetching = pyqtSignal()
+    fetched = pyqtSignal()
+
     def __init__(self, iface, chart):
         self.fetcher = None
         self.iface = iface
@@ -110,6 +113,7 @@ class ProfileMapTool(QgsMapToolEmitPoint):
         self.fetcher = PointsFetcher(uri, wkt, self.startPoint, self.endPoint)
         self.fetcher.update.connect(self.update)
         self.fetcher.start()
+        self.fetching.emit()
 
     def update(self):
         points = self.fetcher.points
@@ -125,6 +129,7 @@ class ProfileMapTool(QgsMapToolEmitPoint):
             self.iface.activeLayer().select(self.fetcher.pcids)
 
         self.fetcher = None
+        self.fetched.emit()
 
     def canvasMoveEvent(self, e):
         if not self.isEmittingPoint:
