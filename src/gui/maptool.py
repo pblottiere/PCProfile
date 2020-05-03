@@ -20,7 +20,10 @@ __date__ = "2020/04/19"
 __email__ = "blottiere.paul@gmail.com"
 __license__ = "GPLv3"
 
+from threading import Thread
+
 from qgis.PyQt.QtGui import QColor
+from qgis.PyQt.QtCore import QObject, pyqtSignal
 
 from qgis.core import (QgsWkbTypes,
                        QgsPointXY,
@@ -33,9 +36,39 @@ from qgis.gui import QgsMapToolEmitPoint, QgsRubberBand, QgsMapTool
 from PCProfile.src.core import Database
 
 
+class PointsFetcher(QObject, Thread):
+
+    update = pyqtSignal()
+
+    def __init__(self, uri, wkt, start_point, end_point):
+        super(QObject, self).__init__()
+        super(Thread, self).__init__()
+        self.uri = uri
+        self.wkt = wkt
+        self.start_point = start_point
+        self.end_point = end_point
+
+        self.points = []
+        self.xmin = 0
+        self.xmax = 0
+        self.zmin = 0
+        self.zmax = 0
+        self.pcids = []
+
+    def run(self):
+        db = Database(self.uri)
+        db.open()
+        self.points, self.xmin, self.xmax, self.zmin, self.zmax, self.pcids \
+            = db.intersects_points(self.start_point, self.end_point, self.wkt)
+        db.close()
+
+        self.update.emit()
+
+
 class ProfileMapTool(QgsMapToolEmitPoint):
 
     def __init__(self, iface, chart):
+        self.fetcher = None
         self.iface = iface
         self.chart = chart
         self._debug = False
@@ -65,23 +98,33 @@ class ProfileMapTool(QgsMapToolEmitPoint):
     def canvasReleaseEvent(self, e):
         self.isEmittingPoint = False
 
-        if not self.rectangle():
+        if not self.rectangle() or self.fetcher:
             return
 
         provider = self.iface.activeLayer().dataProvider()
         uri = QgsDataSourceUri(provider.dataSourceUri())
-        db = Database(uri)
-        db.open()
+
         polygon = self.rubberBand2.asGeometry()
         wkt = "SRID=32616;{}".format(polygon.asWkt())
-        points, xmin, xmax, zmin, zmax, pcids = db.intersects_points(self.startPoint, self.endPoint, wkt)
-        db.close()
+
+        self.fetcher = PointsFetcher(uri, wkt, self.startPoint, self.endPoint)
+        self.fetcher.update.connect(self.update)
+        self.fetcher.start()
+
+    def update(self):
+        points = self.fetcher.points
+        xmin = self.fetcher.xmin
+        xmax = self.fetcher.xmax
+        zmin = self.fetcher.zmin
+        zmax = self.fetcher.zmax
 
         self.chart.update(points, xmin, xmax, zmin, zmax)
 
         if self._debug:
             self.iface.activeLayer().removeSelection()
-            self.iface.activeLayer().select(pcids)
+            self.iface.activeLayer().select(self.fetcher.pcids)
+
+        self.fetcher = None
 
     def canvasMoveEvent(self, e):
         if not self.isEmittingPoint:
