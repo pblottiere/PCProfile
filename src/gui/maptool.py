@@ -40,27 +40,23 @@ class PointsFetcher(QObject, Thread):
 
     update = pyqtSignal()
 
-    def __init__(self, uri, wkt, start_point, end_point):
+    def __init__(self, uri, wkt, start_point, end_point, chart):
         super(QObject, self).__init__()
         super(Thread, self).__init__()
         self.uri = uri
         self.wkt = wkt
+        self.chart = chart
         self.start_point = start_point
         self.end_point = end_point
-
-        self.points = []
-        self.xmin = 0
-        self.xmax = 0
-        self.zmin = 0
-        self.zmax = 0
-        self.pcids = []
 
     def run(self):
         db = Database(self.uri)
         db.open()
-        self.points, self.xmin, self.xmax, self.zmin, self.zmax, self.pcids \
+        points, xmin, xmax, zmin, zmax, pcids \
             = db.intersects_points(self.start_point, self.end_point, self.wkt)
         db.close()
+
+        self.chart.update(points, xmin, xmax, zmin, zmax)
 
         self.update.emit()
 
@@ -110,24 +106,12 @@ class ProfileMapTool(QgsMapToolEmitPoint):
         polygon = self.rubberBand2.asGeometry()
         wkt = "SRID=32616;{}".format(polygon.asWkt())
 
-        self.fetcher = PointsFetcher(uri, wkt, self.startPoint, self.endPoint)
+        self.fetcher = PointsFetcher(uri, wkt, self.startPoint, self.endPoint, self.chart)
         self.fetcher.update.connect(self.update)
         self.fetcher.start()
         self.fetching.emit()
 
     def update(self):
-        points = self.fetcher.points
-        xmin = self.fetcher.xmin
-        xmax = self.fetcher.xmax
-        zmin = self.fetcher.zmin
-        zmax = self.fetcher.zmax
-
-        self.chart.update(points, xmin, xmax, zmin, zmax)
-
-        if self._debug:
-            self.iface.activeLayer().removeSelection()
-            self.iface.activeLayer().select(self.fetcher.pcids)
-
         self.fetcher = None
         self.fetched.emit()
 
