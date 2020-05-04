@@ -26,7 +26,7 @@ from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QAction
 
 from .resources import *
-from .src.gui import ProfileMapTool, SelectDock, View, Chart
+from .src.gui import ProfileMapTool, SelectDock, View, Chart, SettingsWidget
 
 
 def classFactory(iface):
@@ -42,6 +42,7 @@ class MinimalPlugin:
         self.action = QAction(icon, 'Profile', self.iface.mainWindow())
         self.action.triggered.connect(self.profile)
         self.iface.addToolBarIcon(self.action)
+        self.iface.addPluginToMenu('PCProfile', self.action)
 
         self.iface.currentLayerChanged.connect(self.update_visibility)
         self.update_visibility()
@@ -49,12 +50,19 @@ class MinimalPlugin:
         self.chart = Chart(self.iface.mapCanvas())
         self.view = View(self.iface, self.chart)
         self.view.hide()
+
         self.tool = ProfileMapTool(self.iface, self.chart)
         self.tool.fetching.connect(self.fetching)
         self.tool.fetched.connect(self.fetched)
 
         self.dock = SelectDock(self.chart, self.tool)
         self.iface.addDockWidget(Qt.LeftDockWidgetArea, self.dock)
+
+        self.settings_widget = SettingsWidget()
+        icon = QIcon(":/plugins/pcprofile/settings.png")
+        self.action_settings = QAction(icon, 'Settings', self.iface.mainWindow())
+        self.action_settings.triggered.connect(self.settings)
+        self.iface.addPluginToMenu('PCProfile', self.action_settings)
 
     def fetching(self):
         self.dock.setEnabled(False)
@@ -82,3 +90,6 @@ class MinimalPlugin:
         self.iface.mapCanvas().setMapTool(self.tool)
         self.dock.show()
         self.view.show()
+
+    def settings(self):
+        self.settings_widget.show()

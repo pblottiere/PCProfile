@@ -25,3 +25,4 @@ from .view import View
 from .chart import Chart
 from .select import SelectDock
 from .maptool import ProfileMapTool
+from .settings import SettingsWidget

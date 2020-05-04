@@ -21,5 +21,6 @@ __email__ = "blottiere.paul@gmail.com"
 __license__ = "GPLv3"
 
 
-from .database import Database
 from .ramps import Ramp
+from .database import Database
+from .settings import Settings
