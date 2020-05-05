@@ -44,11 +44,16 @@ class Settings(object):
             name = Settings.get(setting, QtGui.QColor("red").name())
             self.labels_color = name
 
+            setting = Settings.Chart.OpenGL
+            value = Settings.get(setting, True, bool)
+            self.opengl = value
+
     class Chart(enum.Enum):
 
         BackgroundColor = "chart/background_color"
         AxisColor = "chart/axis_color"
         LabelsColor = "chart/labels_color"
+        OpenGL = "chart/opengl"
 
     def get(setting, default, type=str):
         key = "pcprofile/{}".format(setting.value)

@@ -112,6 +112,10 @@ class Chart(QObject):
     def labels_color(self):
         return QColor(self._settings.labels_color)
 
+    @pyqtProperty(bool, notify=update_settings)
+    def opengl(self):
+        return self._settings.opengl
+
     def read_settings(self, settings=None):
         if not settings:
             settings = Settings.Snapshot()

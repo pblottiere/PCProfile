@@ -38,7 +38,7 @@ ChartView {
   ScatterSeries {
     id: serie0
     color: pychart.ramp_color(0)
-    useOpenGL: true
+    useOpenGL: pychart.opengl
     axisX: axisX
     axisY: axisY
     markerSize: pychart.marker_size
@@ -48,7 +48,7 @@ ChartView {
   ScatterSeries {
     id: serie1
     color: pychart.ramp_color(1)
-    useOpenGL: true
+    useOpenGL: pychart.opengl
     axisX: axisX
     axisY: axisY
     markerSize: pychart.marker_size
@@ -58,7 +58,7 @@ ChartView {
   ScatterSeries {
     id: serie2
     color: pychart.ramp_color(2)
-    useOpenGL: true
+    useOpenGL: pychart.opengl
     axisX: axisX
     axisY: axisY
     markerSize: pychart.marker_size
@@ -68,7 +68,7 @@ ChartView {
   ScatterSeries {
     id: serie3
     color: pychart.ramp_color(3)
-    useOpenGL: true
+    useOpenGL: pychart.opengl
     axisX: axisX
     axisY: axisY
     markerSize: pychart.marker_size
@@ -78,7 +78,7 @@ ChartView {
   ScatterSeries {
     id: serie4
     color: pychart.ramp_color(4)
-    useOpenGL: true
+    useOpenGL: pychart.opengl
     axisX: axisX
     axisY: axisY
     markerSize: pychart.marker_size
@@ -88,7 +88,7 @@ ChartView {
   ScatterSeries {
     id: serie5
     color: pychart.ramp_color(5)
-    useOpenGL: true
+    useOpenGL: pychart.opengl
     axisX: axisX
     axisY: axisY
     markerSize: pychart.marker_size
@@ -98,7 +98,7 @@ ChartView {
   ScatterSeries {
     id: serie6
     color: pychart.ramp_color(6)
-    useOpenGL: true
+    useOpenGL: pychart.opengl
     axisX: axisX
     axisY: axisY
     markerSize: pychart.marker_size
@@ -108,7 +108,7 @@ ChartView {
   ScatterSeries {
     id: serie7
     color: pychart.ramp_color(7)
-    useOpenGL: true
+    useOpenGL: pychart.opengl
     axisX: axisX
     axisY: axisY
     markerSize: pychart.marker_size
@@ -118,7 +118,7 @@ ChartView {
   ScatterSeries {
     id: serie8
     color: pychart.ramp_color(8)
-    useOpenGL: true
+    useOpenGL: pychart.opengl
     axisX: axisX
     axisY: axisY
     markerSize: pychart.marker_size
@@ -128,7 +128,7 @@ ChartView {
   ScatterSeries {
     id: serie9
     color: pychart.ramp_color(9)
-    useOpenGL: true
+    useOpenGL: pychart.opengl
     axisX: axisX
     axisY: axisY
     markerSize: pychart.marker_size
@@ -138,7 +138,7 @@ ChartView {
   ScatterSeries {
     id: serie10
     color: pychart.ramp_color(10)
-    useOpenGL: true
+    useOpenGL: pychart.opengl
     axisX: axisX
     axisY: axisY
     markerSize: pychart.marker_size
@@ -148,7 +148,7 @@ ChartView {
   ScatterSeries {
     id: serie11
     color: pychart.ramp_color(11)
-    useOpenGL: true
+    useOpenGL: pychart.opengl
     axisX: axisX
     axisY: axisY
     markerSize: pychart.marker_size

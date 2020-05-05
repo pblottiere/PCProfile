@@ -80,6 +80,7 @@ class SettingsWidget(QtWidgets.QDialog, FORM_CLASS):
         snapshot.background_color = self._background_color.color().name()
         snapshot.axes_color = self._axes_color.color().name()
         snapshot.labels_color = self._labels_color.color().name()
+        snapshot.opengl = self.opengl.isChecked()
         self.updated.emit(snapshot)
 
     def accept(self):
@@ -99,3 +100,7 @@ class SettingsWidget(QtWidgets.QDialog, FORM_CLASS):
         color = self._labels_color.color().name()
         setting = Settings.Chart.LabelsColor
         Settings.set(setting, color)
+
+        value = self.opengl.isChecked()
+        setting = Settings.Chart.OpenGL
+        Settings.set(setting, value)
