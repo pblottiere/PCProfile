@@ -104,6 +104,14 @@ class Chart(QObject):
     def background_color(self):
         return QColor(self._settings.background_color)
 
+    @pyqtProperty(QColor, notify=update_settings)
+    def axis_color(self):
+        return QColor(self._settings.axes_color)
+
+    @pyqtProperty(QColor, notify=update_settings)
+    def labels_color(self):
+        return QColor(self._settings.labels_color)
+
     def read_settings(self, settings=None):
         if not settings:
             settings = Settings.Snapshot()

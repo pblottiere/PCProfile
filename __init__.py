@@ -67,6 +67,7 @@ class MinimalPlugin:
 
     def settings_updated(self, settings):
         self.chart.read_settings(settings)
+        self.view.read_settings(settings)
 
     def fetching(self):
         self.dock.setEnabled(False)

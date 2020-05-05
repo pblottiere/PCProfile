@@ -14,7 +14,12 @@ ChartView {
       labelsVisible: true
       tickCount: 1
       minorTickCount: 1
-      labelsColor: "red"
+      labelsColor: pychart.labels_color
+      color: pychart.axis_color
+      gridLineColor: pychart.axis_color
+      minorGridLineColor: pychart.axis_color
+      shadesColor: pychart.axis_color
+      shadesBorderColor: pychart.axis_color
   }
 
   ValueAxis {
@@ -22,7 +27,12 @@ ChartView {
       min: pychart.zmin
       max: pychart.zmax
       tickCount: 1
-      labelsColor: "red"
+      labelsColor: pychart.labels_color
+      color: pychart.axis_color
+      gridLineColor: pychart.axis_color
+      minorGridLineColor: pychart.axis_color
+      shadesColor: pychart.axis_color
+      shadesBorderColor: pychart.axis_color
   }
 
   ScatterSeries {

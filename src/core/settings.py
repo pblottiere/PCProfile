@@ -40,10 +40,15 @@ class Settings(object):
             name = Settings.get(setting, QtGui.QColor("grey").name())
             self.axes_color = name
 
+            setting = Settings.Chart.LabelsColor
+            name = Settings.get(setting, QtGui.QColor("red").name())
+            self.labels_color = name
+
     class Chart(enum.Enum):
 
         BackgroundColor = "chart/background_color"
         AxisColor = "chart/axis_color"
+        LabelsColor = "chart/labels_color"
 
     def get(setting, default, type=str):
         key = "pcprofile/{}".format(setting.value)

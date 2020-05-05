@@ -28,6 +28,8 @@ from qgis.PyQt.QtGui import QColor
 from qgis.PyQt.QtCore import Qt, QUrl
 from qgis.PyQt.QtWidgets import QWidget, QDockWidget
 
+from PCProfile.src.core import Settings
+
 
 class View(object):
 
@@ -38,7 +40,6 @@ class View(object):
         self.view = QQuickView()
         self.view.setResizeMode(QQuickView.SizeRootObjectToView)
         self.view.rootContext().setContextProperty("pychart", chart)
-        # self.view.setColor(QColor("#404040"))
         self.view.setColor(QColor("#000000"))
         self.view.setSource(QUrl.fromLocalFile(qml))
 
@@ -46,6 +47,14 @@ class View(object):
         self.widget = QDockWidget()
         self.widget.setWidget(self.container)
         iface.addDockWidget(Qt.BottomDockWidgetArea, self.widget)
+
+        self.read_settings()
+
+    def read_settings(self, settings=None):
+        if not settings:
+            settings = Settings.Snapshot()
+
+        self.view.setColor(QColor(settings.background_color))
 
     def show(self):
         self.widget.show()
