@@ -48,12 +48,20 @@ class Settings(object):
             value = Settings.get(setting, True, bool)
             self.opengl = value
 
+            setting = Settings.Profile.Budget
+            value = Settings.get(setting, 100000, int)
+            self.budget = value
+
     class Chart(enum.Enum):
 
         BackgroundColor = "chart/background_color"
         AxisColor = "chart/axis_color"
         LabelsColor = "chart/labels_color"
         OpenGL = "chart/opengl"
+
+    class Profile(enum.Enum):
+
+        Budget = "profile/budget"
 
     def get(setting, default, type=str):
         key = "pcprofile/{}".format(setting.value)

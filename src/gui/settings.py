@@ -70,6 +70,10 @@ class SettingsWidget(QtWidgets.QDialog, FORM_CLASS):
         color = Settings.get(setting, QtGui.QColor("red"))
         self._labels_color.setColor(QtGui.QColor(color))
 
+        setting = Settings.Profile.Budget
+        value = Settings.get(setting, 100000, int)
+        self.budget.setValue(value)
+
     def cancel(self):
         snapshot = Settings.Snapshot()
         self.updated.emit(snapshot)
@@ -81,6 +85,7 @@ class SettingsWidget(QtWidgets.QDialog, FORM_CLASS):
         snapshot.axes_color = self._axes_color.color().name()
         snapshot.labels_color = self._labels_color.color().name()
         snapshot.opengl = self.opengl.isChecked()
+        snapshot.budget = self.budget.value()
         self.updated.emit(snapshot)
 
     def accept(self):
@@ -103,4 +108,8 @@ class SettingsWidget(QtWidgets.QDialog, FORM_CLASS):
 
         value = self.opengl.isChecked()
         setting = Settings.Chart.OpenGL
+        Settings.set(setting, value)
+
+        value = self.budget.value()
+        setting = Settings.Profile.Budget
         Settings.set(setting, value)

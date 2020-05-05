@@ -28,6 +28,8 @@ import os
 from qgis.core import QgsProject
 from qgis.PyQt import QtCore, QtWidgets, uic
 
+from PCProfile.src.core import Settings
+
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'ui/select.ui'))
@@ -45,8 +47,22 @@ class SelectDock(QtWidgets.QDockWidget, FORM_CLASS):
         self.scaled.stateChanged.connect(self.scaled_changed)
         self.budget.valueChanged.connect(self.budget_changed)
 
+        self.block_signal = False
+        self.read_settings()
+
+    def read_settings(self, settings=None):
+        if not settings:
+            settings = Settings.Snapshot()
+
+        # don't want to update chart when I modify default value in
+        # settings window
+        self.block_signal = True
+        self.budget.setValue(settings.budget)
+        self.block_signal = False
+
     def budget_changed(self):
-        self.chart.set_budget(self.budget.value())
+        if not self.block_signal:
+            self.chart.set_budget(self.budget.value())
 
     def scaled_changed(self):
         self.chart.set_scaled(self.scaled.isChecked())

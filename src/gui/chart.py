@@ -121,6 +121,7 @@ class Chart(QObject):
             settings = Settings.Snapshot()
         self._settings = settings
 
+        self._budget = settings.budget
         self.update_settings.emit()
 
     def set_scaled(self, status):
