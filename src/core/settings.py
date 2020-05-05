@@ -41,7 +41,7 @@ class Settings(object):
             self.axes_color = name
 
             setting = Settings.Chart.LabelsColor
-            name = Settings.get(setting, QtGui.QColor("red").name())
+            name = Settings.get(setting, QtGui.QColor("white").name())
             self.labels_color = name
 
             setting = Settings.Chart.OpenGL
@@ -51,6 +51,10 @@ class Settings(object):
             setting = Settings.Profile.Budget
             value = Settings.get(setting, 100000, int)
             self.budget = value
+
+            setting = Settings.Profile.SingleColor
+            name = Settings.get(setting, QtGui.QColor("blue").name())
+            self.single_color = name
 
     class Chart(enum.Enum):
 
@@ -62,6 +66,7 @@ class Settings(object):
     class Profile(enum.Enum):
 
         Budget = "profile/budget"
+        SingleColor = "profile/single_color"
 
     def get(setting, default, type=str):
         key = "pcprofile/{}".format(setting.value)

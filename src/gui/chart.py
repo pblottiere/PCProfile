@@ -124,6 +124,9 @@ class Chart(QObject):
         self._budget = settings.budget
         self.update_settings.emit()
 
+        self._ramp.color = settings.single_color
+        self.color.emit()
+
     def set_scaled(self, status):
         self._scaled = status
         self.updated.emit()

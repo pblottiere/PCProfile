@@ -24,18 +24,33 @@ import os
 
 from qgis.PyQt.QtGui import QImage, QColor
 
+from .settings import Settings
+
 
 class Ramp(object):
 
     def __init__(self, name="elevation"):
-        n = 12
         self.values = []
+        self.name = name
+        self._color = Settings.Snapshot().single_color
+        self._generate()
 
-        if "single" in name.lower():
-            color = QColor("#13496e")
+    @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, c):
+        self._color = c
+        self._generate()
+
+    def _generate(self):
+        self.values = []
+        n = 12
+        if "single" in self.name.lower():
             for i in range(0, n):
-                self.values.append(color)
-        elif "elevation" in name.lower():
+                self.values.append(QColor(self._color))
+        elif "elevation" in self.name.lower():
             path = os.path.dirname(os.path.realpath(__file__))
             ramp = os.path.join(path, "ramps", "dem.png")
             img = QImage(ramp)
