@@ -4,7 +4,7 @@ import QtQuick 2.0
 ChartView {
   id: chart
   antialiasing: true
-  backgroundColor: "#404040"
+  backgroundColor: pychart.background_color
   legend.visible: false
 
   ValueAxis {

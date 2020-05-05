@@ -30,13 +30,14 @@ from PyQt5.QtQuick import QQuickView
 from qgis.PyQt.QtWidgets import QWidget, QDockWidget
 import json
 
-from PCProfile.src.core import Ramp
+from PCProfile.src.core import Ramp, Settings
 
 
 class Chart(QObject):
     updated = pyqtSignal()
     color = pyqtSignal()
     update_marker_size = pyqtSignal()
+    update_settings = pyqtSignal()
     fake = pyqtSignal()
 
     def __init__(self, canvas):
@@ -56,6 +57,8 @@ class Chart(QObject):
         self._scaled = True
         self._marker_size = 2.0
         self._ramp = Ramp("elevation")
+
+        self.read_settings()
 
     @pyqtSlot(str, result='QColor')
     def ramp_color(self, step):
@@ -96,6 +99,17 @@ class Chart(QObject):
     @pyqtSlot(str)
     def log_from_qml(self, param):
         print(param)
+
+    @pyqtProperty(QColor, notify=update_settings)
+    def background_color(self):
+        return QColor(self._settings.background_color)
+
+    def read_settings(self, settings=None):
+        if not settings:
+            settings = Settings.Snapshot()
+        self._settings = settings
+
+        self.update_settings.emit()
 
     def set_scaled(self, status):
         self._scaled = status

@@ -32,11 +32,11 @@ class Settings(object):
     class Snapshot(object):
 
         def __init__(self):
-            setting = Settings.System.BackgroundColor
+            setting = Settings.Chart.BackgroundColor
             name = Settings.get(setting, QtGui.QColor("white").name())
             self.background_color = name
 
-            setting = Settings.System.AxisColor
+            setting = Settings.Chart.AxisColor
             name = Settings.get(setting, QtGui.QColor("grey").name())
             self.axes_color = name
 

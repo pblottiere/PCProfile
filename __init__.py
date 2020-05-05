@@ -59,10 +59,14 @@ class MinimalPlugin:
         self.iface.addDockWidget(Qt.LeftDockWidgetArea, self.dock)
 
         self.settings_widget = SettingsWidget()
+        self.settings_widget.updated.connect(self.settings_updated)
         icon = QIcon(":/plugins/pcprofile/settings.png")
         self.action_settings = QAction(icon, 'Settings', self.iface.mainWindow())
         self.action_settings.triggered.connect(self.settings)
         self.iface.addPluginToMenu('PCProfile', self.action_settings)
+
+    def settings_updated(self, settings):
+        self.chart.read_settings(settings)
 
     def fetching(self):
         self.dock.setEnabled(False)

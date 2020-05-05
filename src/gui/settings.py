@@ -32,142 +32,9 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'ui/settings.ui'))
 
 
-# class Settings(QtCore.QObject):
-#
-#     def __init__(self, parent, widget):
-#         super(SnailTabSettingsSystem, self).__init__()
-#
-#         self.parent = parent
-#         self._widget = widget
-#
-#         self.init_gui()
-#
-#     def init_gui(self):
-#         self._cpu_color = QgsColorButton()
-#         self._widget.mCpuLayout.addWidget(self._cpu_color)
-#
-#         self._ram_color = QgsColorButton()
-#         self._widget.mRamLayout.addWidget(self._ram_color)
-#
-#         self._background_color = QgsColorButton()
-#         self._widget.mBackgroundLayout.addWidget(self._background_color)
-#
-#         self._axes_color = QgsColorButton()
-#         self._widget.mAxesLayout.addWidget(self._axes_color)
-#
-#         setting = SnailSettings.System.RefreshSec
-#         self._widget.mRefreshSec.setMinimum(1)
-#         sec = SnailSettings.get(setting, 1, int)
-#         self._widget.mRefreshSec.setValue(sec)
-#
-#         setting = SnailSettings.System.RamWarning
-#         activated = SnailSettings.get(setting, False, bool)
-#         self._widget.mRamWarning.setChecked(activated)
-#
-#         setting = SnailSettings.System.RamWarningLimit
-#         limit = SnailSettings.get(setting, 90, int)
-#         self._widget.mRamWarningLimit.setValue(limit)
-#
-#         self.read_settings()
-#
-#     def read_settings(self):
-#         setting = SnailSettings.System.DisplayChart
-#         display_chart = SnailSettings.get(setting, True, bool)
-#         checkbox = self._widget.mSystemDisplayChart
-#         checkbox.setChecked(display_chart)
-#
-#         setting = SnailSettings.System.CpuColor
-#         color = SnailSettings.get(setting, QtGui.QColor("blue"))
-#         self._cpu_color.setColor(QtGui.QColor(color))
-#
-#         setting = SnailSettings.System.RamColor
-#         color = SnailSettings.get(setting, QtGui.QColor("red"))
-#         self._ram_color.setColor(QtGui.QColor(color))
-#
-#         setting = SnailSettings.System.BackgroundColor
-#         color = SnailSettings.get(setting, QtGui.QColor("white"))
-#         self._background_color.setColor(QtGui.QColor(color))
-#
-#         setting = SnailSettings.System.AxisColor
-#         color = SnailSettings.get(setting, QtGui.QColor("grey"))
-#         self._axes_color.setColor(QtGui.QColor(color))
-#
-#     def store(self):
-#         checkbox = self._widget.mSystemDisplayChart
-#         setting = SnailSettings.System.DisplayChart
-#         SnailSettings.set(setting, checkbox.isChecked())
-#
-#         color = self._cpu_color.color().name()
-#         setting = SnailSettings.System.CpuColor
-#         SnailSettings.set(setting, color)
-#
-#         color = self._ram_color.color().name()
-#         setting = SnailSettings.System.RamColor
-#         SnailSettings.set(setting, color)
-#
-#         color = self._background_color.color().name()
-#         setting = SnailSettings.System.BackgroundColor
-#         SnailSettings.set(setting, color)
-#
-#         color = self._axes_color.color().name()
-#         setting = SnailSettings.System.AxisColor
-#         SnailSettings.set(setting, color)
-#
-#         sec = self._widget.mRefreshSec.value()
-#         setting = SnailSettings.System.RefreshSec
-#         SnailSettings.set(setting, sec)
-#
-#         activated = self._widget.mRamWarning.isChecked()
-#         setting = SnailSettings.System.RamWarning
-#         SnailSettings.set(setting, activated)
-#
-#         limit = self._widget.mRamWarningLimit.value()
-#         setting = SnailSettings.System.RamWarningLimit
-#         SnailSettings.set(setting, limit)
-#
-#     @property
-#     def display_chart(self):
-#         return self._widget.mSystemDisplayChart.isChecked()
-#
-#     @display_chart.setter
-#     def display_chart(self, display):
-#         pass
-#
-#     @property
-#     def axes_color(self):
-#         return self._axes_color.color().name()
-#
-#     @axes_color.setter
-#     def axes_color(self, color):
-#         pass
-#
-#     @property
-#     def background_color(self):
-#         return self._background_color.color().name()
-#
-#     @background_color.setter
-#     def background_color(self, color):
-#         pass
-#
-#     @property
-#     def cpu_color(self):
-#         return self._cpu_color.color().name()
-#
-#     @cpu_color.setter
-#     def cpu_color(self, color):
-#         pass
-#
-#     @property
-#     def ram_color(self):
-#         return self._ram_color.color().name()
-#
-#     @ram_color.setter
-#     def ram_color(self, color):
-#         pass
-
 class SettingsWidget(QtWidgets.QDialog, FORM_CLASS):
 
-    # updated = QtCore.pyqtSignal(SnailSettings.Snapshot)
+    updated = QtCore.pyqtSignal(Settings.Snapshot)
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -200,23 +67,21 @@ class SettingsWidget(QtWidgets.QDialog, FORM_CLASS):
         # self._axes_color.setColor(QtGui.QColor(color))
 
     def cancel(self):
-        pass
-        # snapshot = SnailSettings.Snapshot()
-        # self.updated.emit(snapshot)
-        # self._tab_system.read_settings()
+        snapshot = Settings.Snapshot()
+        self.updated.emit(snapshot)
+        self.read_settings()
 
     def apply(self):
-        pass
-        # snapshot = SnailSettings.Snapshot()
-        # snapshot.cpu_color = self._tab_system.cpu_color
-        # snapshot.ram_color = self._tab_system.ram_color
-        # snapshot.background_color = self._tab_system.background_color
-        # snapshot.axes_color = self._tab_system.axes_color
-        # snapshot.display_chart = self._tab_system.display_chart
-        # self.updated.emit(snapshot)
+        snapshot = Settings.Snapshot()
+        snapshot.background_color = self._background_color.color().name()
+        self.updated.emit(snapshot)
 
     def accept(self):
-        pass
-        # self._tab_system.store()
-        # self.apply()
-        # self.close()
+        self.store()
+        self.apply()
+        self.close()
+
+    def store(self):
+        color = self._background_color.color().name()
+        setting = Settings.Chart.BackgroundColor
+        Settings.set(setting, color)
