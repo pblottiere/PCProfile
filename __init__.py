@@ -45,6 +45,7 @@ class MinimalPlugin:
         self.iface.addPluginToMenu('PCProfile', self.action)
 
         self.iface.currentLayerChanged.connect(self.update_visibility)
+        self.iface.mapCanvas().destinationCrsChanged.connect(self.update_visibility)
         self.update_visibility()
 
         self.chart = Chart(self.iface.mapCanvas())
@@ -80,9 +81,13 @@ class MinimalPlugin:
 
     def update_visibility(self):
         enable = False
-        if self.iface.activeLayer():
-            uri = self.iface.activeLayer().dataProvider().dataSourceUri()
-            if "(pa)" in uri:
+        layer = self.iface.activeLayer()
+        canvas = self.iface.mapCanvas()
+        if layer:
+            uri = layer.dataProvider().dataSourceUri()
+            layers_crs_projected = not layer.crs().isGeographic()
+            canvas_crs_projected = not canvas.mapSettings().destinationCrs().isGeographic()
+            if "(pa)" in uri and layers_crs_projected and canvas_crs_projected:
                 enable = True
         self.action.setEnabled(enable)
 

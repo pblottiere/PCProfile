@@ -30,8 +30,6 @@ from PyQt5.QtQuick import QQuickView
 from qgis.PyQt.QtWidgets import QWidget, QDockWidget
 import json
 
-SRID=32616
-
 
 class Point(object):
 

@@ -28,6 +28,9 @@ from qgis.PyQt.QtCore import QObject, pyqtSignal
 from qgis.core import (QgsWkbTypes,
                        QgsPointXY,
                        QgsRectangle,
+                       QgsCoordinateReferenceSystem,
+                       QgsCoordinateTransform,
+                       QgsProject,
                        Qgis,
                        QgsMessageLog,
                        QgsDataSourceUri)
@@ -56,7 +59,8 @@ class PointsFetcher(QObject, Thread):
             = db.intersects_points(self.start_point, self.end_point, self.wkt)
         db.close()
 
-        self.chart.update(points, xmin, xmax, zmin, zmax)
+        if points:
+            self.chart.update(points, xmin, xmax, zmin, zmax)
 
         self.update.emit()
 
@@ -104,7 +108,14 @@ class ProfileMapTool(QgsMapToolEmitPoint):
         uri = QgsDataSourceUri(provider.dataSourceUri())
 
         polygon = self.rubberBand2.asGeometry()
-        wkt = "SRID=32616;{}".format(polygon.asWkt())
+
+        srcCrs = self.iface.mapCanvas().mapSettings().destinationCrs()
+        destCrs = self.iface.activeLayer().crs()
+        tr = QgsCoordinateTransform(srcCrs, destCrs, QgsProject.instance())
+        polygon.transform(tr)
+
+        epsg = destCrs.authid().split(":")[1]
+        wkt = "SRID={};{}".format(epsg, polygon.asWkt())
 
         self.fetcher = PointsFetcher(uri, wkt, self.startPoint, self.endPoint, self.chart)
         self.fetcher.update.connect(self.update)
